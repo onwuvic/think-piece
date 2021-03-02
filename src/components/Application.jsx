@@ -1,25 +1,34 @@
 import React, { Component } from 'react';
 
 import Posts from './Posts';
-import { firestore } from '../firebase';
+import { firestore, auth, createUserProfileDocument } from '../firebase';
 import { collectIdsAndDocs } from '../utilities';
+import Authentication from './Authentication';
 
 class Application extends Component {
   state = {
     posts: [],
+    user: null
   };
 
-  unsubcribe = null;
+  unsubcribeFromFirestore = null;
+  unsubcribeFromAuth = null;
 
   async componentDidMount() {
-    this.unsubcribe = firestore.collection('posts').onSnapshot(snapShot => {
+    this.unsubcribeFromFirestore = firestore.collection('posts').onSnapshot(snapShot => {
       const posts = snapShot.docs.map(collectIdsAndDocs);
       this.setState({ posts });
+    });
+
+    this.unsubcribeFromAuth = auth.onAuthStateChanged(async (authUser) => {
+      const user = await createUserProfileDocument(authUser);
+      console.log(user);
+      this.setState({ user })
     });
   }
 
   componentWillUnmount() {
-    this.unsubcribe();
+    this.unsubcribeFromFirestore();
   }
 
   // since we are listening to changes from the db directly 
@@ -54,11 +63,12 @@ class Application extends Component {
   // }
 
   render() {
-    const { posts } = this.state;
+    const { posts, user } = this.state;
 
     return (
       <main className="Application">
         <h1>Think Piece</h1>
+        <Authentication user={user} />
         <Posts 
           posts={posts} 
           // onCreate={this.handleCreate} 
