@@ -1,34 +1,33 @@
 import React, { Component } from 'react';
 
 import Posts from './Posts';
-import { auth, createUserProfileDocument } from '../firebase';
 import Authentication from './Authentication';
 
 class Application extends Component {
-  state = {
-    // posts: [],
-    user: null
-  };
+  // state = {
+  //   // posts: [],
+  //   user: null
+  // };
 
-  // unsubcribeFromFirestore = null;
-  unsubcribeFromAuth = null;
+  // // unsubcribeFromFirestore = null;
+  // unsubcribeFromAuth = null;
 
-  async componentDidMount() {
-    // this.unsubcribeFromFirestore = firestore.collection('posts').onSnapshot(snapShot => {
-    //   const posts = snapShot.docs.map(collectIdsAndDocs);
-    //   this.setState({ posts });
-    // });
+  // async componentDidMount() {
+  //   // this.unsubcribeFromFirestore = firestore.collection('posts').onSnapshot(snapShot => {
+  //   //   const posts = snapShot.docs.map(collectIdsAndDocs);
+  //   //   this.setState({ posts });
+  //   // });
 
-    this.unsubcribeFromAuth = auth.onAuthStateChanged(async (authUser) => {
-      const user = await createUserProfileDocument(authUser);
-      console.log(user);
-      this.setState({ user })
-    });
-  }
+  //   this.unsubcribeFromAuth = auth.onAuthStateChanged(async (authUser) => {
+  //     const user = await createUserProfileDocument(authUser);
+  //     console.log(user);
+  //     this.setState({ user })
+  //   });
+  // }
 
-  componentWillUnmount() {
-    this.unsubcribeFromAuth();
-  }
+  // componentWillUnmount() {
+  //   this.unsubcribeFromAuth();
+  // }
 
   // since we are listening to changes from the db directly 
   // we can move this to where it is actually be used and
@@ -62,12 +61,13 @@ class Application extends Component {
   // }
 
   render() {
-    const { user } = this.state;
 
     return (
       <main className="Application">
         <h1>Think Piece</h1>
-        <Authentication user={user} />
+        <Authentication 
+          // user={user}
+        />
         <Posts 
           // posts={posts} 
           // onCreate={this.handleCreate} 
